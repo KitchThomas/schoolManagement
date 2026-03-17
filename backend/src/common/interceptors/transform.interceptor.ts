@@ -15,7 +15,7 @@ import {
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Request, Response } from 'express';
+import { Request, Response as ExpressResponse } from 'express';
 
 /**
  * 标准化成功响应接口
@@ -39,7 +39,7 @@ export class TransformInterceptor<T>
   ): Observable<Response<T>> {
     const ctx = context.switchToHttp();
     const request = ctx.getRequest<Request>();
-    const response = ctx.getResponse<Response>();
+    const response = ctx.getResponse<ExpressResponse>();
 
     return next.handle().pipe(
       map((data) => ({

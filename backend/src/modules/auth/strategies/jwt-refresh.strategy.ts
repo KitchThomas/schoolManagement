@@ -12,7 +12,7 @@ import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { ConfigService } from '@nestjs/config';
 import { Request } from 'express';
-import { PrismaService } from '../../common/prisma/prisma.service';
+import { PrismaService } from '../../../common/prisma/prisma.service';
 
 /**
  * JWT 刷新负载接口

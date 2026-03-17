@@ -11,7 +11,7 @@ import { Injectable, UnauthorizedException, Logger } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { ConfigService } from '@nestjs/config';
-import { PrismaService } from '../../common/prisma/prisma.service';
+import { PrismaService } from '../../../common/prisma/prisma.service';
 
 /**
  * JWT 负载接口
@@ -101,7 +101,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     const permissions: string[] = [
       ...new Set(
         user.roles.flatMap((userRole: any) =>
-          userRole.role.permissions.map((rp: any) => `${rp.permission.resource}:${rp.permission.action}`),
+          userRole.role.permissions.map((rp: any) => `${rp.permission.resource}:${rp.permission.action}` as string),
         ),
       ),
     ];
