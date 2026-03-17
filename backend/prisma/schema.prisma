@@ -32,7 +32,7 @@ model User {
   courses             Course[]
   enrollments         Enrollment[]         @relation("UserEnrollments")
   enrolledByEnrollments Enrollment[]       @relation("EnrollmentAssigner")
-  assignments         Assignment[]
+  assignments         Assignment[]         @relation("AssignmentCreator")
   submissions         Submission[]         @relation("UserSubmissions")
   gradedSubmissions   Submission[]         @relation("SubmissionGrader")
   quizAttempts        QuizAttempt[]
@@ -40,7 +40,6 @@ model User {
   uploadedFiles       File[]
   notifications       Notification[]
   createdCourses      Course[]             @relation("CourseCreator")
-  createdAssignments  Assignment[]         @relation("AssignmentCreator")
   createdQuizzes      Quiz[]               @relation("QuizCreator")
   assignedRoles       UserRole[]           @relation("RoleAssigner")
 
@@ -118,6 +117,7 @@ model Course {
   title         String
   description   String?
   teacherId     String        @map("teacher_id")
+  creatorId     String        @map("creator_id")
   templateId    String?       @map("template_id")
   coverImageUrl String?       @map("cover_image_url")
   status        CourseStatus  @default(DRAFT)
@@ -132,6 +132,7 @@ model Course {
 
   // Relations
   teacher       User             @relation(fields: [teacherId], references: [id])
+  creator       User             @relation("CourseCreator", fields: [creatorId], references: [id])
   template      CourseTemplate?  @relation(fields: [templateId], references: [id])
   contents      CourseContent[]
   enrollments   Enrollment[]
@@ -139,6 +140,7 @@ model Course {
   quizzes       Quiz[]
 
   @@index([teacherId])
+  @@index([creatorId])
   @@index([status])
   @@map("courses")
 }
@@ -188,6 +190,7 @@ model CourseContent {
   children         CourseContent[]   @relation("ContentHierarchy")
   standards        ContentStandard[]
   learningProgress LearningProgress[]
+  assignments      Assignment[]
 
   @@index([courseId])
   @@index([parentId])
