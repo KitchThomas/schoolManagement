@@ -28,20 +28,21 @@ model User {
   deletedAt     DateTime? @map("deleted_at")
 
   // Relations
-  roles              UserRole[]
-  courses            Course[]
-  enrollments        Enrollment[]
-  assignments        Assignment[]
-  submissions        Submission[]
-  quizAttempts       QuizAttempt[]
-  learningProgress   LearningProgress[]
-  uploadedFiles      File[]
-  notifications      Notification[]
-  createdCourses     Course[]       @relation("CourseCreator")
-  createdAssignments Assignment[]   @relation("AssignmentCreator")
-  createdQuizzes     Quiz[]         @relation("QuizCreator")
-  gradedSubmissions  Submission[]   @relation("SubmissionGrader")
-  assignedRoles      UserRole[]     @relation("RoleAssigner")
+  roles               UserRole[]
+  courses             Course[]
+  enrollments         Enrollment[]         @relation("UserEnrollments")
+  enrolledByEnrollments Enrollment[]       @relation("EnrollmentAssigner")
+  assignments         Assignment[]
+  submissions         Submission[]         @relation("UserSubmissions")
+  gradedSubmissions   Submission[]         @relation("SubmissionGrader")
+  quizAttempts        QuizAttempt[]
+  learningProgress    LearningProgress[]
+  uploadedFiles       File[]
+  notifications       Notification[]
+  createdCourses      Course[]             @relation("CourseCreator")
+  createdAssignments  Assignment[]         @relation("AssignmentCreator")
+  createdQuizzes      Quiz[]               @relation("QuizCreator")
+  assignedRoles       UserRole[]           @relation("RoleAssigner")
 
   @@map("users")
 }
@@ -182,9 +183,9 @@ model CourseContent {
   deletedAt        DateTime?     @map("deleted_at")
 
   // Relations
-  course           Course[]         @relation(fields: [courseId], references: [id], onDelete: Cascade)
-  parent           CourseContent?   @relation("ContentHierarchy", fields: [parentId], references: [id], onDelete: Cascade)
-  children         CourseContent[]  @relation("ContentHierarchy")
+  course           Course            @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  parent           CourseContent?    @relation("ContentHierarchy", fields: [parentId], references: [id], onDelete: Cascade)
+  children         CourseContent[]   @relation("ContentHierarchy")
   standards        ContentStandard[]
   learningProgress LearningProgress[]
 
@@ -256,9 +257,8 @@ model Enrollment {
 
   // Relations
   course           Course            @relation(fields: [courseId], references: [id], onDelete: Cascade)
-  student          User              @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  student          User              @relation("UserEnrollments", fields: [studentId], references: [id], onDelete: Cascade)
   enrolledByUser   User?             @relation("EnrollmentAssigner", fields: [enrolledBy], references: [id])
-  learningProgress LearningProgress[]
 
   @@unique([courseId, studentId])
   @@index([courseId])
@@ -288,7 +288,6 @@ model LearningProgress {
   // Relations
   student    User          @relation(fields: [studentId], references: [id], onDelete: Cascade)
   content    CourseContent @relation(fields: [contentId], references: [id], onDelete: Cascade)
-  enrollment Enrollment?   @relation(fields: [enrollmentId], references: [id])
 
   @@unique([studentId, contentId])
   @@index([studentId])
@@ -376,7 +375,7 @@ model Submission {
 
   // Relations
   assignment Assignment @relation(fields: [assignmentId], references: [id], onDelete: Cascade)
-  student    User       @relation(fields: [studentId], references: [id])
+  student    User       @relation("UserSubmissions", fields: [studentId], references: [id])
   grader     User?      @relation("SubmissionGrader", fields: [gradedBy], references: [id])
 
   @@unique([assignmentId, studentId, attemptNumber])
