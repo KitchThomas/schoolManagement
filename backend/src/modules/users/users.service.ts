@@ -61,7 +61,7 @@ export class UsersService {
           passwordHash,
           firstName,
           lastName,
-          status: status || 'ACTIVE',
+          status: (status || 'ACTIVE') as any,
         },
       });
 
@@ -134,12 +134,12 @@ export class UsersService {
     const items: UserListItemDto[] = users.map((user) => ({
       id: user.id,
       email: user.email,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      avatarUrl: user.avatarUrl,
+      firstName: user.firstName ?? undefined,
+      lastName: user.lastName ?? undefined,
+      avatarUrl: user.avatarUrl ?? undefined,
       status: user.status,
       emailVerified: user.emailVerified,
-      lastLoginAt: user.lastLoginAt,
+      lastLoginAt: user.lastLoginAt ?? undefined,
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
       roleNames: user.roles.map((ur) => ur.role.name),
@@ -204,12 +204,12 @@ export class UsersService {
     return {
       id: user.id,
       email: user.email,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      avatarUrl: user.avatarUrl,
+      firstName: user.firstName ?? undefined,
+      lastName: user.lastName ?? undefined,
+      avatarUrl: user.avatarUrl ?? undefined,
       status: user.status,
       emailVerified: user.emailVerified,
-      lastLoginAt: user.lastLoginAt,
+      lastLoginAt: user.lastLoginAt ?? undefined,
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
       roles,
@@ -255,7 +255,7 @@ export class UsersService {
         firstName: updateUserDto.firstName,
         lastName: updateUserDto.lastName,
         avatarUrl: updateUserDto.avatarUrl,
-        status: updateUserDto.status,
+        status: updateUserDto.status as any,
       },
     });
 
