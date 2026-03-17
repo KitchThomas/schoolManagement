@@ -187,7 +187,7 @@ export class UsersService {
       id: ur.role.id,
       name: ur.role.name,
       displayName: ur.role.displayName,
-      description: ur.role.description,
+      description: ur.role.description ?? undefined,
     }));
 
     // 提取权限（去重）

@@ -95,13 +95,13 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     }
 
     // 提取角色名称
-    const roles = user.roles.map((userRole) => userRole.role.name);
+    const roles = user.roles.map((userRole: any) => userRole.role.name);
 
     // 提取权限字符串（去重）
-    const permissions = [
+    const permissions: string[] = [
       ...new Set(
-        user.roles.flatMap((userRole) =>
-          userRole.role.permissions.map((rp) => `${rp.permission.resource}:${rp.permission.action}`),
+        user.roles.flatMap((userRole: any) =>
+          userRole.role.permissions.map((rp: any) => `${rp.permission.resource}:${rp.permission.action}`),
         ),
       ),
     ];
