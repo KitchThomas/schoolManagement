@@ -1,4 +1,4 @@
-import { ReactNode } from 'react'
+import { Outlet } from 'react-router-dom'
 import { Layout, Menu, Dropdown, Avatar, Badge } from 'antd'
 import {
   DashboardOutlined,
@@ -14,11 +14,7 @@ import { useAuthStore } from '../store/authStore'
 
 const { Header, Sider, Content } = Layout
 
-interface LayoutProps {
-  children: ReactNode
-}
-
-export default function MainLayout({ children }: LayoutProps) {
+export default function MainLayout() {
   const navigate = useNavigate()
   const location = useLocation()
   const { user, logout } = useAuthStore()
@@ -111,7 +107,7 @@ export default function MainLayout({ children }: LayoutProps) {
         </Header>
         
         <Content style={{ margin: '24px', background: 'white', padding: '24px', borderRadius: 8 }}>
-          {children}
+          <Outlet />
         </Content>
       </Layout>
     </Layout>
